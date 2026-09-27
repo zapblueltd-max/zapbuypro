@@ -1,0 +1,173 @@
+@import "tailwindcss" source("../");
+
+/* ---------------------------------------------------------------------------
+   Zapbuy design tokens.
+
+   The interface is dark-only by design: a portfolio is read at a glance, often
+   at night, and a single surface keeps the number the brightest thing on screen.
+   Series colours come from the validated categorical palette (see AGENTS.md);
+   `volt` is the brand accent and is never used to encode data categories.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-void: #0b0d10;
+  --color-surface: #13161c;
+  --color-surface-2: #191d25;
+  --color-surface-3: #20252f;
+  --color-line: #242a35;
+  --color-line-soft: #1b202a;
+
+  --color-ink: #f2f4f7;
+  --color-ink-2: #9ba3b0;
+  --color-ink-3: #6b7280;
+
+  --color-volt: #d6f25c;
+  --color-volt-deep: #a8c63f;
+
+  --color-gain: #2fb675;
+  --color-loss: #e5484d;
+
+  /* Categorical series slots, stepped for the dark surface. Fixed order. */
+  --color-series-1: #3987e5;
+  --color-series-2: #d95926;
+  --color-series-3: #199e70;
+  --color-series-4: #c98500;
+  --color-series-5: #d55181;
+  --color-series-6: #008300;
+
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-sans: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --animate-rise: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-marquee: marquee 64s linear infinite;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+html {
+  background-color: var(--color-void);
+  color-scheme: dark;
+}
+
+body {
+  @apply m-0 bg-void text-ink font-sans antialiased;
+  font-feature-settings: "ss01" 1;
+}
+
+/* Numerals never reflow between ticks. */
+.tnum {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Display type: the serif is set tight and optically corrected. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 0.95;
+}
+
+.eyebrow {
+  @apply text-[11px] font-medium tracking-[0.18em] uppercase text-ink-3;
+}
+
+/* Hairline card. Depth comes from the border and an inner highlight, not a
+   drop shadow, which reads as mud on a near-black surface. */
+.panel {
+  @apply rounded-2xl border border-line bg-surface;
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
+}
+
+.panel-quiet {
+  @apply rounded-2xl border border-line-soft bg-surface/60;
+}
+
+/* Fixed, non-interactive film grain. Never applied to a scrolling container. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.rule-grid {
+  background-image: linear-gradient(
+      to right,
+      var(--color-line-soft) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, var(--color-line-soft) 1px, transparent 1px);
+  background-size: 96px 96px;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-volt);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-volt);
+  color: var(--color-void);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Chrome/Safari scrollbars inside data panes. */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+.thin-scroll::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 999px;
+}

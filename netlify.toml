@@ -1,0 +1,13 @@
+[build]
+  command = "vite build"
+  publish = "dist/client"
+
+[dev]
+  command = "npm run dev"
+  targetPort = 3000
+  port = 8888
+
+# Coin logos come from the price provider's CDN and are resized through the
+# Netlify Image CDN, so the browser never downloads a 256px asset for a 24px mark.
+[images]
+  remote_images = ["https://coin-images\\.coingecko\\.com/.*", "https://assets\\.coingecko\\.com/.*"]
